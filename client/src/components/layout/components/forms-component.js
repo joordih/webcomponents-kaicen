@@ -150,66 +150,6 @@ class Forms extends HTMLElement {
             margin-bottom: .5rem;
           }
       }
-
-      .button {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        background-color: #531414;
-        padding: 0.5rem;
-        border-radius: 0.375rem;
-        transition: background-color 0.1s ease;
-        border: none;
-
-        &:hover {
-          background-color: #621212;
-        }
-
-        &:active {
-          border: 1px solid #e63535;
-        }
-
-        svg path {
-          fill: #e63535;
-        }
-
-        .button-text {
-          font-size: 0.875rem;
-          color: #e63535;
-          font-weight: bold;
-          padding-right: 0.25rem;
-        }
-      }
-
-      .save-button {
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        background-color: #1f5314;
-        padding: 0.5rem;
-        border-radius: 0.20rem;
-        transition: background-color 0.1s ease;
-        border: none;
-
-        &:hover {
-          background-color: #206312;
-        }
-
-        &:active {
-          border: 1px solid #51e633;
-        }
-
-        svg path {
-          fill: #51e633;
-        }
-
-        .save-button-text {
-          font-size: 0.875rem;
-          color: #51e633;
-          font-weight: bold;
-          padding-right: 0.25rem;
-        }
-      }
     </style>
     <div class="header">
       <div class="tab">
@@ -281,13 +221,12 @@ class Forms extends HTMLElement {
       </div>
       <div class="tab-action">
         <a href="#save" class="actions">
-          <button title="Delete" class="save-button">
+          <button-component text="Guardar" background="#1f5314" background-hover="#206312" text-color="#51e633" border-radius="0.375rem">
             <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 -0.5 25 25">
-              <path fill="currentColor" d="M10 17h4v4h-4z"/>
-              <path fill="currentColor" d="m20.12 8.71l-4.83-4.83A3 3 0 0 0 13.17 3H10v6h5a1 1 0 0 1 0 2H9a1 1 0 0 1-1-1V3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h2v-4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4h2a3 3 0 0 0 3-3v-7.17a3 3 0 0 0-.88-2.12"/>
+              <path d="M10 17h4v4h-4z"/>
+              <path d="m20.12 8.71l-4.83-4.83A3 3 0 0 0 13.17 3H10v6h5a1 1 0 0 1 0 2H9a1 1 0 0 1-1-1V3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h2v-4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4h2a3 3 0 0 0 3-3v-7.17a3 3 0 0 0-.88-2.12"/>
             </svg>
-            <span class="save-button-text">Guardar</span>
-          </button>
+          </button-component>
         </a>  
       </div>
     </div>
@@ -311,12 +250,11 @@ class Forms extends HTMLElement {
     </div>
     <div class="inputs misc-tab">
       <div>
-        <button title="Delete" class="button">
+        <button-component text="Eliminar pedido" background="#531414" background-hover="#621212" text-color="#e63535" border-radius="0.375rem">
           <svg viewBox="0 -0.5 25 25" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg">
-            <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M18.507 19.853V6.034C18.5116 5.49905 18.3034 4.98422 17.9283 4.60277C17.5532 4.22131 17.042 4.00449 16.507 4H8.50705C7.9721 4.00449 7.46085 4.22131 7.08577 4.60277C6.7107 4.98422 6.50252 5.49905 6.50705 6.034V19.853C6.45951 20.252 6.65541 20.6407 7.00441 20.8399C7.35342 21.039 7.78773 21.0099 8.10705 20.766L11.907 17.485C12.2496 17.1758 12.7705 17.1758 13.113 17.485L16.9071 20.767C17.2265 21.0111 17.6611 21.0402 18.0102 20.8407C18.3593 20.6413 18.5551 20.2522 18.507 19.853Z" clip-rule="evenodd" fill-rule="evenodd" fill="currentColor"></path>
+            <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M18.507 19.853V6.034C18.5116 5.49905 18.3034 4.98422 17.9283 4.60277C17.5532 4.22131 17.042 4.00449 16.507 4H8.50705C7.9721 4.00449 7.46085 4.22131 7.08577 4.60277C6.7107 4.98422 6.50252 5.49905 6.50705 6.034V19.853C6.45951 20.252 6.65541 20.6407 7.00441 20.8399C7.35342 21.039 7.78773 21.0099 8.10705 20.766L11.907 17.485C12.2496 17.1758 12.7705 17.1758 13.113 17.485L16.9071 20.767C17.2265 21.0111 17.6611 21.0402 18.0102 20.8407C18.3593 20.6413 18.5551 20.2522 18.507 19.853Z" clip-rule="evenodd" fill-rule="evenodd"></path>
           </svg>
-          <span class="button-text">Eliminar Pedido</span>
-        </button>
+        </button-component>
       </div>
     </div>
     `

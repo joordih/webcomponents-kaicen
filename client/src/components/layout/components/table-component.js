@@ -1,91 +1,37 @@
 import { store } from '@redux/store.js'
 import { editElement } from '@redux/slices/forms-slice.js'
+import { addOrders, removeOrder } from '@redux/slices/orders-slice.js'
 
 class Table extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
+    this.unsubscribe = null
   }
 
-  connectedCallback () {
-    this.data = {
-      orders: [
-        {
-          id: 1,
-          name: 'John Doe',
-          email: 'john.doe@example.com',
-          date_of_creation: '2024-10-01T10:23:00Z',
-          date_of_update: '2024-10-03T14:15:00Z'
-        },
-        {
-          id: 2, 
-          name: 'Jane Smith',
-          email: 'jane.smith@example.com',
-          date_of_creation: '2024-09-28T08:50:00Z',
-          date_of_update: '2024-10-02T12:35:00Z'
-        },
-        {
-          id: 3,
-          name: 'Michael Johnson',
-          email: 'michael.johnson@example.com',
-          date_of_creation: '2024-09-25T13:45:00Z',
-          date_of_update: '2024-09-30T11:20:00Z'
-        },
-        {
-          id: 4,
-          name: 'Emily Davis',
-          email: 'emily.davis@example.com',
-          date_of_creation: '2024-10-05T09:15:00Z',
-          date_of_update: '2024-10-06T15:50:00Z'
-        },
-        {
-          id: 5,
-          name: 'David Wilson',
-          email: 'david.wilson@example.com',
-          date_of_creation: '2024-10-02T11:30:00Z',
-          date_of_update: '2024-10-04T17:05:00Z'
-        },
-        {
-          id: 6,
-          name: 'Sarah Miller',
-          email: 'sarah.miller@example.com',
-          date_of_creation: '2024-09-29T07:40:00Z',
-          date_of_update: '2024-10-01T18:00:00Z'
-        },
-        {
-          id: 7,
-          name: 'Chris Brown',
-          email: 'chris.brown@example.com',
-          date_of_creation: '2024-10-03T14:20:00Z',
-          date_of_update: '2024-10-05T09:45:00Z'
-        },
-        {
-          id: 8,
-          name: 'Laura White',
-          email: 'laura.white@example.com',
-          date_of_creation: '2024-10-04T16:10:00Z',
-          date_of_update: '2024-10-06T12:30:00Z'
-        },
-        {
-          id: 9,
-          name: 'James Harris',
-          email: 'james.harris@example.com',
-          date_of_creation: '2024-10-01T12:55:00Z',
-          date_of_update: '2024-10-02T10:40:00Z'
-        },
-        {
-          id: 10,
-          name: 'Amanda Clark',
-          email: 'amanda.clark@example.com',
-          date_of_creation: '2024-09-26T18:05:00Z',
-          date_of_update: '2024-09-28T13:50:00Z'
-        }
-      ]
-    }
+  async connectedCallback () {
+    this.unsubscribe = store.subscribe(() => {
+      // const state = store.getState()
+      this.render()
+    })
+
+    await fetch('http://localhost:8080/admin/orders')
+      .then(response => response.json())
+      .then(data => store.dispatch(addOrders(data)))
+      .catch(error => console.error(error))
+
     this.render()
   }
 
+  disconnectedCallback () {
+    if (this.unsubscribe) {
+      this.unsubscribe()
+    }
+  }
+
   render () {
+    const orders = store.getState().orders.orders
+
     this.shadow.innerHTML =
     /* html */`
     <style>
@@ -185,13 +131,13 @@ class Table extends HTMLElement {
       </tbody>
     </table>
     <div class="footer">
-      Amount of orders: ${this.data.orders.length}
+      Amount of orders: ${orders.length}
     </div>
     `
 
     const tableBody = this.shadow.querySelector('#orders')
 
-    this.data.orders.forEach((order, index) => {
+    store.getState().orders.orders.forEach((order, index) => {
       const row = tableBody.insertRow()
 
       row.classList.add('order-card')
@@ -203,33 +149,53 @@ class Table extends HTMLElement {
       const creationDateCell = row.insertCell(3)
       const updateDateCell = row.insertCell(4)
 
-      actionCell.appendChild(this.createActionCell())
+      actionCell.appendChild(this.createActionCell(order.id))
 
-      const editButtons = this.shadow.querySelectorAll('.edit-button')
+      // const editButtons = this.shadow.querySelectorAll('.edit-button')
 
-      editButtons.forEach(buttons => {
-        const editButton = buttons.closest(`.order-card[data-id='${order.id}']`)
+      // editButtons.forEach(buttons => {
+      //   const editButton = buttons.closest(`.order-card[data-id='${order.id}']`)
         
-        if (editButton) {
-          editButton.addEventListener('click', (event) => {
-            const itemId = event.target.closest('.order-card').dataset.id
-            const order = this.data.orders.find(order => order.id === Number(itemId))
+      //   if (editButton) {
+      //     editButton.addEventListener('click', (event) => {
+      //       const itemId = event.target.closest('.order-card').dataset.id
+      //       const order = store.getState().orders.orders.find(order => order.id === Number(itemId))
 
-            for (const value in order) {
-              console.log(this.checkItemType({ value, order }))
-              const inputValue = {
-                id: value,
-                element: {
-                  value: this.checkItemType({ value, order })
-                }
-              }
+      //       for (const value in order) {
+      //         console.log(this.checkItemType({ value, order }))
+      //         const inputValue = {
+      //           id: value,
+      //           element: {
+      //             value: this.checkItemType({ value, order })
+      //           }
+      //         }
 
-              store.dispatch(editElement(inputValue))
-            }
-          })
-        }
-      })
+      //         store.dispatch(editElement(inputValue))
+      //       }
+      //     })
+      //   }
+      // })
 
+      // const deleteButtons = this.shadow.querySelectorAll('.delete-button')
+
+      // console.log(Array.from(document.querySelectorAll(`.order-card[data-id='18']`)).map(order => order.closest('.delete-button')));
+
+      // deleteButtons.forEach(buttons => {
+      //   const itemButton = buttons.closest(`.order-card[data-id='${order.id}']`)
+      //   console.log(itemButton)
+        
+      //   if (itemButton) {
+      //     itemButton.addEventListener('click', async (event) => {
+      //       const itemId = event.target.closest('.order-card').dataset.id
+      //       const order = store.getState().orders.orders.find(order => order.id === Number(itemId))
+
+      //       await fetch(`http://localhost:8080/admin/orders/delete?id=${order.id}`)
+      //         .then(response => console.log(response.json))
+      //         .catch(error => console.error(error))
+      //     })
+      //   }
+      // })
+      
       nameCell.textContent = `Nombre: ${order.name}`
       emailCell.textContent = `Email: ${order.email}`
       creationDateCell.textContent = `Fecha de creación: ${new Date(order.date_of_creation).toLocaleString()}`
@@ -248,13 +214,62 @@ class Table extends HTMLElement {
     }
   }
 
-  createActionCell () {
+  addEventListener () {
+    this.shadow.querySelectorAll('.order-card .edit-button').forEach(button => {
+      button.addEventListener('click', async (event) => {
+        event.stopPropagation()
+
+        const itemId = event.target.closest('.order-card').dataset.id
+        const order = store.getState().orders.orders.find(order => order.id === Number(itemId))
+
+        for (const value in order) {
+          console.log(this.checkItemType({ value, order }))
+          const inputValue = {
+            id: value,
+            element: {
+              value: this.checkItemType({ value, order })
+            }
+          }
+
+          store.dispatch(editElement(inputValue))
+        }
+      })
+    })
+
+    this.shadow.querySelectorAll('.order-card .delete-button').forEach(button => {
+      button.addEventListener('click', async (event) => {
+        event.stopPropagation()
+        
+        const orderCard = button.closest('.order-card')
+
+        const dataId = orderCard.dataset.id
+        const order = store.getState().orders.orders.find(order => order.id === Number(dataId))
+    
+        if (!order) return
+    
+        try {
+          const response = await fetch(`http://localhost:8080/admin/orders/delete?id=${dataId}`)
+          
+          if (response.ok) {
+            await store.dispatch(removeOrder(order))
+
+            this.shadow.getElementById(`.card-header[data-id='${dataId}']`).remove()
+            this.render()
+          }
+        } catch (error) {
+          console.error('Error al intentar eliminar la orden:', error)
+        }
+      })
+    })
+  }
+
+  createActionCell (id) {
     const cardHeader = document.createElement('div')
-    cardHeader.classList.add('card-header')
+    cardHeader.classList.add('card-header', `header-${id}`)
 
     const editButton = document.createElement('a')
 
-    editButton.classList.add('edit-button')
+    editButton.classList.add('edit-button', `edit-${id}`)
     editButton.innerHTML =
     `
     <svg width="21" height="21" viewBox="0 0 24 24">
@@ -264,7 +279,7 @@ class Table extends HTMLElement {
 
     const deleteButton = document.createElement('a')
 
-    deleteButton.classList.add('delete-button')
+    deleteButton.classList.add('delete-button', `delete-${id}`)
     deleteButton.innerHTML =
     `
     <svg width="21" height="21" viewBox="0 0 24 24">

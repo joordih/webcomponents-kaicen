@@ -7,3 +7,6 @@ import './components/header/menu-component.js'
 import './components/layout/layout-component.js'
 import './components/layout/components/forms-component.js'
 import './components/layout/components/table-component.js'
+
+/* UI COMPONENTS */
+import './components/ui/button-component.js'
