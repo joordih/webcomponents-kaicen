@@ -3,6 +3,7 @@ import { Order } from "./models/order";
 import { Dialect } from "sequelize";
 
 import * as config from './config/config.json';
+import { User } from "./models/user";
 
 const env = 'development';
 const databaseConfig = config[env] as {
@@ -19,7 +20,7 @@ const sequelize = new Sequelize({
   password: databaseConfig.password,
   host: databaseConfig.host,
   dialect: databaseConfig.dialect,
-  models: [Order],
+  models: [Order, User],
   logging: false
 });
 

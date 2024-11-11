@@ -10,6 +10,8 @@ class Button extends HTMLElement {
     this.textColor = this.getAttribute('text-color') || '#4CAF50'
 
     this.borderRadius = this.getAttribute('border-radius') || '0.375rem'
+    this.padding = this.getAttribute('padding') || '0.5rem'
+    this.marginLeft = this.getAttribute('margin-left') || '0'
   }
 
   connectedCallback () {
@@ -17,7 +19,7 @@ class Button extends HTMLElement {
   }
 
   render () {
-    this.shadow.innerHTML = 
+    this.shadow.innerHTML =
     /* html */ `
       <style>
         .button {
@@ -25,11 +27,12 @@ class Button extends HTMLElement {
           align-items: center;
           cursor: pointer;
           background-color: ${this.backgroundColor};
-          padding: 0.5rem;
+          padding: ${this.padding};
           width: 100%;
           border-radius: ${this.borderRadius};
           transition: background-color 0.1s ease;
           border: none;
+          margin-left: ${this.marginLeft};
 
           &:hover {
             background-color: ${this.backgroundHoverColor};
@@ -46,7 +49,7 @@ class Button extends HTMLElement {
             padding-right: 0.25rem;
           }
         }
-        
+
         ::slotted(svg) {
           fill: ${this.textColor};
         }

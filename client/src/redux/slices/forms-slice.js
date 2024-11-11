@@ -11,9 +11,14 @@ export const formsSlice = createSlice({
       state.inputs[action.payload.id] = action.payload.element
     },
     removeElement: (state, action) => {
+      delete state.inputs[action.payload]
     },
     editElement: (state, action) => {
       state.inputs[action.payload.id] = action.payload.element
+    },
+    createElement: (state, action) => {
+      state.inputs[action.payload.id] = action.payload.element
+      state.currentTab = 'create'
     },
     setCurrentTab: (state, action) => {
       state.currentTab = action.payload
@@ -21,6 +26,6 @@ export const formsSlice = createSlice({
   }
 })
 
-export const { addElement, removeElement, editElement, setCurrentTab } = formsSlice.actions
+export const { addElement, removeElement, editElement, setCurrentTab, createElement } = formsSlice.actions
 export const broadcastInputs = state => state.forms.inputs
 export default formsSlice.reducer

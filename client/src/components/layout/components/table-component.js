@@ -1,5 +1,5 @@
 import { store } from '@redux/store.js'
-import { editElement } from '@redux/slices/forms-slice.js'
+import { editElement, createElement } from '@redux/slices/forms-slice.js'
 import { addOrders, removeOrder } from '@redux/slices/orders-slice.js'
 
 class Table extends HTMLElement {
@@ -37,7 +37,7 @@ class Table extends HTMLElement {
   render () {
     const orders = store.getState().orders.orders
 
-    this.shadow.innerHTML = 
+    this.shadow.innerHTML =
     /* html */`
       <style>
         .hidden-scrollbar {
@@ -113,7 +113,6 @@ class Table extends HTMLElement {
           color: white;
           shadow: 0 0 0.5rem rgba(0, 0, 0, 0.1);
           transition: color 0.3s;
-          margin: 0 0.3rem;
 
           &:hover {
             color: #7f7f7f;
@@ -139,8 +138,7 @@ class Table extends HTMLElement {
           border-radius: 0.5rem;
           background-color: rgb(39, 39, 42);
           color: white;
-          padding: 1rem;
-          width: 95%;
+          width: 100%;
         }
       </style>
       <div class="orders-header">
@@ -153,7 +151,13 @@ class Table extends HTMLElement {
         <tbody class="hidden-scrollbar">
         </tbody>
       </table>
-      <div class="footer"></div>
+      <div class="footer">
+        <button-component id="create-button" text="Nuevo" background="transparent" background-hover="#17171A" text-color="#FAFAFA" padding="0.375rem" margin-left="0.2rem" border-radius="0.5rem">
+          <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="mdi-plus" width="18" height="18" viewBox="0 0 22 22">
+            <path d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" />
+          </svg>
+        </button-component>
+      </div>
     `
 
     const tableBody = this.shadow.querySelector('#orders tbody')
@@ -172,8 +176,8 @@ class Table extends HTMLElement {
       actionCell.appendChild(this.createActionCell(index, order.id))
       nameCell.innerHTML = `Nombre: <span>${order.name}</span>`
       emailCell.innerHTML = `Email: <span>${order.email}</span>`
-      creationDateCell.innerHTML = `Fecha de creación: <span>${order.date_of_creation}</span>`
-      updateDateCell.innerHTML = `Fecha de actualización: <span>${order.date_of_update}</span>`
+      creationDateCell.innerHTML = `Fecha de creación: <span>${new Date(order.createdAt).toISOString().slice(0, 10)}</span>`
+      updateDateCell.innerHTML = `Fecha de actualización: <span>${new Date(order.updatedAt).toISOString().slice(0, 10)}</span>`
 
       row.appendChild(actionCell)
       row.appendChild(nameCell)
@@ -189,20 +193,20 @@ class Table extends HTMLElement {
 
   pushPopup () {
     const body = document.querySelector('body')
-    
+
     const title = 'Are you sure you want to delete this order?'
     const message = 'Remember that this action cannot be undone.'
-    
+
     body.insertAdjacentHTML('afterbegin', `<popup-component id='popup-component' title='${title}' message='${message}'></popup-component>`)
   }
 
   addEventListeners () {
     const tableBody = this.shadow.querySelector('#orders tbody')
-  
+
     tableBody.addEventListener('click', async (event) => {
       if (event.target.closest('.delete-button')) {
         this.pushPopup()
-        
+
         const button = event.target.closest('.delete-button')
         const orderCard = button.closest('.order-card')
         const dataId = orderCard.dataset.id
@@ -218,13 +222,13 @@ class Table extends HTMLElement {
                 'Content-Type': 'application/json'
               }
             })
-    
+
             if (response.ok) {
               await store.dispatch(removeOrder(order.id))
-    
+
               console.log(dataId)
               const orderElement = this.shadow.querySelector(`tr.order-card[data-id='${dataId}']`)
-    
+
               if (orderElement) {
                 console.log('Elemento eliminado:', orderElement)
                 orderElement.remove()
@@ -237,13 +241,12 @@ class Table extends HTMLElement {
           }
         })
       }
-      
+
       if (event.target.closest('.edit-button')) {
         const itemId = event.target.closest('.order-card').dataset.id
         const order = store.getState().orders.orders.find(order => order.id === Number(itemId))
 
         for (const value in order) {
-          console.log(this.checkItemType({ value, order }))
           const inputValue = {
             id: value,
             element: {
@@ -255,13 +258,26 @@ class Table extends HTMLElement {
         }
       }
     })
+
+    this.shadow.querySelector('#create-button').addEventListener('click', () => {
+      const inputs = store.getState().forms.inputs
+
+      for (const input in inputs) {
+        store.dispatch(createElement({
+          id: input,
+          element: {
+            value: ''
+          }
+        }))
+      }
+    })
   }
 
   checkItemType ({ value, order }) {
     switch (value) {
       case 'createdAt':
         return new Date(order[value]).toISOString().slice(0, 10)
-      case 'date_of_update':
+      case 'updatedAt':
         return new Date(order[value]).toISOString().slice(0, 10)
       default:
         return order[value]
