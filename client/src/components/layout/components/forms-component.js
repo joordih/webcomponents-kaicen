@@ -1,6 +1,6 @@
 import { store } from '@redux/store.js'
 import { addElement, setCurrentTab } from '@redux/slices/forms-slice.js'
-
+import { editOrder } from '@redux/slices/orders-slice'
 class Forms extends HTMLElement {
   constructor () {
     super()
@@ -149,6 +149,10 @@ class Forms extends HTMLElement {
             }
           }
 
+          .id-input {
+            display: none;
+          }
+
           .input {
             border: 1px solid hsl(240 3.7% 15.9%);
             height: 2.5em;
@@ -159,7 +163,6 @@ class Forms extends HTMLElement {
             color: #6f6f6f;
             border-radius: .2rem;
             transition: all 0.5s;
-            color
 
             &:hover,
             &:focus {
@@ -269,10 +272,14 @@ class Forms extends HTMLElement {
         <label for="date_of_update">Fecha de actualización</label>
         <input type="date" id="date_of_update" class="input" placeholder="Date">
       </div>
+      <div class="id-input">
+        <label for="date_of_update">Order Id</label>
+        <input type="text" id="id" class="input" placeholder="Order Id">
+      </div>
     </div>
     <div class="inputs misc-tab">
       <div>
-        <button-component text="Eliminar pedido" background="#531414" background-hover="#621212" text-color="#e63535" border-radius="0.375rem">
+        <button-component text="Relleno" background="#531414" background-hover="#621212" text-color="#e63535" border-radius="0.375rem">
           <svg viewBox="0 -0.5 25 25" height="20px" width="20px" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linejoin="round" stroke-linecap="round" stroke-width="1.5" d="M18.507 19.853V6.034C18.5116 5.49905 18.3034 4.98422 17.9283 4.60277C17.5532 4.22131 17.042 4.00449 16.507 4H8.50705C7.9721 4.00449 7.46085 4.22131 7.08577 4.60277C6.7107 4.98422 6.50252 5.49905 6.50705 6.034V19.853C6.45951 20.252 6.65541 20.6407 7.00441 20.8399C7.35342 21.039 7.78773 21.0099 8.10705 20.766L11.907 17.485C12.2496 17.1758 12.7705 17.1758 13.113 17.485L16.9071 20.767C17.2265 21.0111 17.6611 21.0402 18.0102 20.8407C18.3593 20.6413 18.5551 20.2522 18.507 19.853Z" clip-rule="evenodd" fill-rule="evenodd"></path>
           </svg>
@@ -284,11 +291,20 @@ class Forms extends HTMLElement {
     this.shadow.querySelector('.header').addEventListener('click', (event) => {
       event.preventDefault()
 
-      const clickedTab = event.target.closest('.tab').querySelector('a').getAttribute('href').replace('#', '')
-      store.dispatch(setCurrentTab(clickedTab))
+      if (event.target.closest('.tab')) {
+        const clickedTab = event.target.closest('.tab').querySelector('a').getAttribute('href').replace('#', '')
+        if (!clickedTab) return
+        store.dispatch(setCurrentTab(clickedTab))
+      }
     })
 
-    this.shadow.querySelectorAll('input').forEach(async input => {
+    this.shadow.querySelector('a.actions > button-component').addEventListener('click', async (event) => {
+      event.preventDefault()
+
+      await this.saveForm()
+    })
+
+    this.shadow.querySelectorAll('input').forEach(async (input, index) => {
       await store.dispatch(addElement({
         id: input.id,
         element: {
@@ -298,6 +314,39 @@ class Forms extends HTMLElement {
         } 
       }))
     })
+  }
+
+  async saveForm () {
+    const orderData = {}
+
+    this.shadow.querySelectorAll('input').forEach((input, index) => {
+      if (input !== null || input !== undefined) {
+        orderData[input.id] = {
+          value: input.value,
+          type: input.type || undefined,
+          placeholder: input.placeholder
+        }
+      }
+    })
+
+    const orderForm = Object.keys(orderData).reduce((acc, key) => {
+      acc[key] = orderData[key].value
+      console.log('Key:', key, 'Value:', orderData[key].value)
+      return acc
+    }, {})
+
+    const response = await fetch('http://localhost:8080/admin/orders/update', {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(orderForm)
+    })
+
+    if (response.ok) {
+      await store.dispatch(editOrder(orderForm))
+      this.render()
+    }
   }
 }
 

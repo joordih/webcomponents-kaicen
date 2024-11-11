@@ -32,6 +32,16 @@ class Order {
     Order.orders.splice(index, 1);
   }
 
+  public save(): void {
+    const index: number = Order.orders.findIndex(order => order.id === this.id);
+
+    if (index === -1) {
+      return;
+    }
+
+    Order.orders[index] = this;
+  }
+  
   public static find(id: number): Order | undefined {
     return Order.orders.find(order => order.id === id);
   }

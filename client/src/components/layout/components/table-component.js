@@ -61,11 +61,10 @@ class Table extends HTMLElement {
 
         tr[class*="order-card"] {
           display: grid;
-          background-color: #5f5f5f;
           color: white;
           width: 400px;
           margin-top: 5px;
-          border-radius: 0.20rem;
+          border-radius: 0.5rem;
           grid-template-columns: 5fr;
           gap: 0px 0px;
           font-family: "Geist", sans-serif;
@@ -76,6 +75,11 @@ class Table extends HTMLElement {
             "product"
             "quantity"
             "price";
+          border: 1px solid hsl(240 3.7% 15.9%);
+
+          &:hover {
+            background-color: #27272A;
+          }
 
           span {
             font-family: "Geist Mono", monospace;
@@ -91,9 +95,13 @@ class Table extends HTMLElement {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            background-color: rgb(39, 39, 42);
+            /*background-color: rgb(39, 39, 42); */
             padding: 0.5rem;
             margin: 0px;
+
+            span {
+              margin-right: auto;
+            }
           }
 
           &:last-child {
@@ -114,11 +122,13 @@ class Table extends HTMLElement {
 
         .orders-header {
           display: flex;
-          justify-content: flex-end;
+          justify-content: flex-start;
           align-items: center;
           background-color: rgb(39, 39, 42);
-          padding: .5rem;
-          border-radius: 0.20rem;
+          padding: .5rem 0rem .5rem 1rem;
+          border-radius: 0.5rem;
+          font-family: "Geist Mono", monospace;
+          color: white;
         }
 
         .footer {
@@ -126,7 +136,7 @@ class Table extends HTMLElement {
           font-family: "Geist Mono", monospace;
           justify-content: flex-start;
           align-items: center;
-          border-radius: 0.20rem;
+          border-radius: 0.5rem;
           background-color: rgb(39, 39, 42);
           color: white;
           padding: 1rem;
@@ -134,6 +144,7 @@ class Table extends HTMLElement {
         }
       </style>
       <div class="orders-header">
+        Amount of orders: ${orders.length}
         <a href="#filter">
           <i class="fa-duotone fa-solid fa-filters"></i>
         </a>
@@ -142,14 +153,12 @@ class Table extends HTMLElement {
         <tbody class="hidden-scrollbar">
         </tbody>
       </table>
-      <div class="footer">
-        Amount of orders: ${orders.length}
-      </div>
+      <div class="footer"></div>
     `
 
     const tableBody = this.shadow.querySelector('#orders tbody')
 
-    orders.forEach(order => {
+    orders.forEach((order, index) => {
       const row = document.createElement('tr')
       row.classList.add('order-card')
       row.dataset.id = order.id
@@ -160,7 +169,7 @@ class Table extends HTMLElement {
       const creationDateCell = document.createElement('td')
       const updateDateCell = document.createElement('td')
 
-      actionCell.appendChild(this.createActionCell(order.id))
+      actionCell.appendChild(this.createActionCell(index, order.id))
       nameCell.innerHTML = `Nombre: <span>${order.name}</span>`
       emailCell.innerHTML = `Email: <span>${order.email}</span>`
       creationDateCell.innerHTML = `Fecha de creación: <span>${order.date_of_creation}</span>`
@@ -178,43 +187,57 @@ class Table extends HTMLElement {
     this.addEventListeners()
   }
 
+  pushPopup () {
+    const body = document.querySelector('body')
+    
+    const title = 'Are you sure you want to delete this order?'
+    const message = 'Remember that this action cannot be undone.'
+    
+    body.insertAdjacentHTML('afterbegin', `<popup-component id='popup-component' title='${title}' message='${message}'></popup-component>`)
+  }
+
   addEventListeners () {
     const tableBody = this.shadow.querySelector('#orders tbody')
   
     tableBody.addEventListener('click', async (event) => {
       if (event.target.closest('.delete-button')) {
+        this.pushPopup()
+        
         const button = event.target.closest('.delete-button')
         const orderCard = button.closest('.order-card')
         const dataId = orderCard.dataset.id
         const order = store.getState().orders.orders.find(order => order.id === Number(dataId))
-  
+
         if (!order) return
-  
-        try {
-          const response = await fetch(`http://localhost:8080/admin/orders/delete?id=${dataId}`, {
-            method: 'DELETE',
-            headers: {
-              'Content-Type': 'application/json'
+
+        document.querySelector('#popup-component').shadowRoot.querySelector('#continue-button').addEventListener('click', async () => {
+          try {
+            const response = await fetch(`http://localhost:8080/admin/orders/delete?id=${dataId}`, {
+              method: 'DELETE',
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            })
+    
+            if (response.ok) {
+              await store.dispatch(removeOrder(order.id))
+    
+              console.log(dataId)
+              const orderElement = this.shadow.querySelector(`tr.order-card[data-id='${dataId}']`)
+    
+              if (orderElement) {
+                console.log('Elemento eliminado:', orderElement)
+                orderElement.remove()
+              } else {
+                console.log(`El elemento con data-id='${dataId}' ya ha sido eliminado.`)
+              }
             }
-          })
-  
-          if (response.ok) {
-            await store.dispatch(removeOrder(order.id))
-  
-            console.log(dataId)
-            const orderElement = this.shadow.querySelector(`tr.order-card[data-id='${dataId}']`)
-  
-            if (orderElement) {
-              console.log('Elemento eliminado:', orderElement)
-              orderElement.remove()
-            } else {
-              console.log(`El elemento con data-id='${dataId}' ya ha sido eliminado.`)
-            }
+          } catch (error) {
+            console.error('Error al intentar eliminar la orden:', error)
           }
-        } catch (error) {
-          console.error('Error al intentar eliminar la orden:', error)
-        }
+        })
       }
+      
       if (event.target.closest('.edit-button')) {
         const itemId = event.target.closest('.order-card').dataset.id
         const order = store.getState().orders.orders.find(order => order.id === Number(itemId))
@@ -245,9 +268,13 @@ class Table extends HTMLElement {
     }
   }
 
-  createActionCell (id) {
+  createActionCell (index, id) {
     const div = document.createElement('div')
     div.classList.add('card-header', `header-${id}`)
+
+    const headerTitle = document.createElement('span')
+    headerTitle.textContent = `Order #${index + 1}`
+    div.appendChild(headerTitle)
 
     const editButton = document.createElement('a')
     editButton.classList.add('edit-button', `edit-${id}`)

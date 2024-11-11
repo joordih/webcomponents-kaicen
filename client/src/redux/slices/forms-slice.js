@@ -13,9 +13,6 @@ export const formsSlice = createSlice({
     removeElement: (state, action) => {
     },
     editElement: (state, action) => {
-      if (state.inputs[action.payload.id] === 'date') {
-        state.inputs[action.payload.id].value = Date.parse(action.payload.element.value)
-      }
       state.inputs[action.payload.id] = action.payload.element
     },
     setCurrentTab: (state, action) => {

@@ -10,3 +10,4 @@ import './components/layout/components/table-component.js'
 
 /* UI COMPONENTS */
 import './components/ui/button-component.js'
+import './components/ui/popup-component.js'

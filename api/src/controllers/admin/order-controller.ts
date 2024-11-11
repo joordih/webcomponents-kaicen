@@ -53,7 +53,7 @@ exports.delete = (req, res) => {
 };
 
 exports.update = (req, res) => {
-  const { id, name, email, date_of_update } = req.query;
+  const { id, name, email, date_of_update } = req.body;
 
   if (!id) {
     return res.json({ message: 'Order ID is required' });
@@ -65,9 +65,11 @@ exports.update = (req, res) => {
     return res.json({ message: 'Order not found' });
   }
   
-  if (name) order.name = name as string;
-  if (email) order.email = email as string;
-  if (date_of_update) order.date_of_update = date_of_update as string;
-  
+  order.name = name;
+  order.email = email;
+  order.date_of_update = date_of_update;
+
+  order.save();
+
   res.json(order);
 };
