@@ -91,7 +91,7 @@ class Table extends HTMLElement {
             display: flex;
             justify-content: flex-end;
             align-items: center;
-            background-color: #4f4f4f;
+            background-color: rgb(39, 39, 42);
             padding: 0.5rem;
             margin: 0px;
           }
@@ -116,7 +116,7 @@ class Table extends HTMLElement {
           display: flex;
           justify-content: flex-end;
           align-items: center;
-          background-color: #4f4f4f;
+          background-color: rgb(39, 39, 42);
           padding: .5rem;
           border-radius: 0.20rem;
         }
@@ -127,7 +127,7 @@ class Table extends HTMLElement {
           justify-content: flex-start;
           align-items: center;
           border-radius: 0.20rem;
-          background-color: #4f4f4f;
+          background-color: rgb(39, 39, 42);
           color: white;
           padding: 1rem;
           width: 95%;

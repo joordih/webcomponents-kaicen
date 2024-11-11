@@ -23,11 +23,15 @@ class Forms extends HTMLElement {
       switch (state.forms.currentTab) {
         case 'general':
           this.shadow.querySelector('.general-tab').style.display = 'grid'
+          this.shadow.querySelector('#general-button').classList.add('active')
           this.shadow.querySelector('.misc-tab').style.display = 'none'
+          this.shadow.querySelector('#misc-button').classList.remove('active')
           break
         case 'misc':
           this.shadow.querySelector('.general-tab').style.display = 'none'
+          this.shadow.querySelector('#general-button').classList.remove('active')
           this.shadow.querySelector('.misc-tab').style.display = 'grid'
+          this.shadow.querySelector('#misc-button').classList.add('active')
           break
         default:
           break
@@ -46,8 +50,8 @@ class Forms extends HTMLElement {
         align-items: center;
         margin-left: 0.5rem;
         padding: 0.1rem;
-        border-radius: 0.20rem;
-        background-color: #4f4f4f;
+        border-radius: 0.5rem;
+        background-color: #27272A;
         grid-area: header;
 
         .tab-action {
@@ -78,25 +82,37 @@ class Forms extends HTMLElement {
           display: flex;
           align-items: center;
           margin: 0 .1rem;
-          padding: 0.5rem;
+          padding: 0.2rem;
           
           justify-content: center;
-          background-color: #6f6f6f;
           border-radius: 0.20rem;
           transition: background-color 0.3s;
 
+          .active {
+            background-color: black;
 
-          &:hover {
-            background-color: #2f2f2f;
+            &:hover {
+              background-color: #0f0f0f;
+            }
           }
+
+          > a:not(.active) {
+            color: rgb(161, 161, 170);
+          }
+
 
           a {
             display: flex;
             justify-content: center;
             align-items:center;
-
+            padding: 0.35rem 0.7rem 0.35rem 0.7rem;
+            border-radius: 0.5rem;
             color: white;
             text-decoration: none;
+
+            &:hover:not(.active) {
+              background-color: #1f1f1f;
+            }
 
             svg {
               margin: 1px;
@@ -110,8 +126,12 @@ class Forms extends HTMLElement {
           grid-template-columns: repeat(2, 1fr);
           grid-template-rows: repeat(9, 1fr);
           gap: 8px;
-          padding: 1rem;
+          padding: 1.5rem;
+          margin: .5rem 0 0 .5rem;
           grid-area: inputs;
+          
+          border: 1px solid hsl(240 3.7% 15.9%);
+          border-radius: 0.5rem;
 
           div {
             display: flex;
@@ -122,7 +142,7 @@ class Forms extends HTMLElement {
               font-family: "Geist", sans-serif;
               
               font-size: 1rem;
-              color: rgba(255, 255, 255, 0.8);
+              color: white;
 
               margin-top: -.5rem;
               margin-bottom: .25rem;
@@ -130,19 +150,21 @@ class Forms extends HTMLElement {
           }
 
           .input {
-            border: 2px solid transparent;
+            border: 1px solid hsl(240 3.7% 15.9%);
             height: 2.5em;
             padding-left: 0.8em;
             outline: none;
             overflow: hidden;
-            background-color: rgba(243, 243, 243, 0.8);
+            background-color: transparent;
+            color: #6f6f6f;
             border-radius: .2rem;
             transition: all 0.5s;
+            color
 
             &:hover,
             &:focus {
-              border: 2px solid #3f3f3f;
-              box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
+              border: 1px solid white;
+              box-shadow: 0px 0px 0px 4.5px rgb(74, 157, 236, 20%);
             }
           }
 
@@ -153,7 +175,7 @@ class Forms extends HTMLElement {
     </style>
     <div class="header">
       <div class="tab">
-        <a href="#general">
+        <a id="general-button" href="#general">
           <svg width="21" height="21" viewBox="0 0 26 26">
             <defs>
               <symbol id="lineMdCogLoop0">
@@ -188,7 +210,7 @@ class Forms extends HTMLElement {
         </a>
       </div>
       <div class="tab">
-        <a href="#misc">
+        <a id="misc-button" href="#misc">
           <svg width="21" height="21" viewBox="0 0 26 26">
             <g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2">
               <path stroke-dasharray="10" stroke-dashoffset="10" d="M3 5l2 2l4 -4">
@@ -221,7 +243,7 @@ class Forms extends HTMLElement {
       </div>
       <div class="tab-action">
         <a href="#save" class="actions">
-          <button-component text="Guardar" background="#1f5314" background-hover="#206312" text-color="#51e633" border-radius="0.375rem">
+          <button-component text="Guardar" background="#1f5314" background-hover="#206312" text-color="#51e633" border-radius="0.5rem">
             <svg xmlns="http://www.w3.org/2000/svg" width="20px" height="20px" viewBox="0 -0.5 25 25">
               <path d="M10 17h4v4h-4z"/>
               <path d="m20.12 8.71l-4.83-4.83A3 3 0 0 0 13.17 3H10v6h5a1 1 0 0 1 0 2H9a1 1 0 0 1-1-1V3H6a3 3 0 0 0-3 3v12a3 3 0 0 0 3 3h2v-4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v4h2a3 3 0 0 0 3-3v-7.17a3 3 0 0 0-.88-2.12"/>

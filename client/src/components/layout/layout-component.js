@@ -10,7 +10,7 @@ class Layout extends HTMLElement {
 
   render () {
     this.shadow.innerHTML =
-    `
+    /* html */`
     <style>
     .container {
       display: grid;
@@ -52,6 +52,7 @@ class Layout extends HTMLElement {
         "inputs inputs inputs inputs"
         "inputs inputs inputs inputs";
       grid-area: forms;
+
     }
     </style>
 
