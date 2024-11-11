@@ -18,7 +18,7 @@ class Menu extends HTMLElement {
           transition: color 0.3s;
 
           &:hover {
-              color: #8d54e8;
+              color: #7f7f7f;
           }
       }
     </style>

@@ -7,5 +7,12 @@
     "sourceMap": true,
     "outDir": "dist",
   },
-  "lib": ["ES2023"]
+  "paths": {
+    "@/*": ["src/*"],
+    "@routes/": ["src/routes/*"],
+    "@controllers/": ["src/controllers/*"],
+    "@models/": ["src/models/*"],
+  },
+  "lib": ["ES2023"],
+  
 }

@@ -15,10 +15,9 @@ class Title extends HTMLElement {
     `
     <style>
       h1 {
-        font-family: Teko, sans-serif;
-        font-weight: 500;
+        font-family: "Geist", sans-serif;
+        font-weight: 700;
         font-size: 2.3rem;
-        letter-spacing: 0.15rem;
         color: #f0f0f0;
         margin: 0;
       }

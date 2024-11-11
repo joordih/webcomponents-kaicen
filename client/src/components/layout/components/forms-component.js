@@ -47,11 +47,11 @@ class Forms extends HTMLElement {
         margin-left: 0.5rem;
         padding: 0.1rem;
         border-radius: 0.20rem;
-        background-color: #BB98F1;
+        background-color: #4f4f4f;
         grid-area: header;
 
         .tab-action {
-          font-family: Ubuntu, sans-serif;
+          font-family: "Geist Mono", monospace;
           display: flex;
           justify-content: flex-end;
           align-items: center;
@@ -74,20 +74,20 @@ class Forms extends HTMLElement {
         }
 
         .tab {
-          font-family: Ubuntu, sans-serif;
+          font-family: "Geist Mono", monospace;
           display: flex;
           align-items: center;
           margin: 0 .1rem;
           padding: 0.5rem;
           
           justify-content: center;
-          background-color: #8d54e8;
+          background-color: #6f6f6f;
           border-radius: 0.20rem;
           transition: background-color 0.3s;
 
 
           &:hover {
-            background-color: #260659;
+            background-color: #2f2f2f;
           }
 
           a {
@@ -119,7 +119,7 @@ class Forms extends HTMLElement {
             width: 100%;
             
             label {
-              font-family: Ubuntu, sans-serif;
+              font-family: "Geist", sans-serif;
               
               font-size: 1rem;
               color: rgba(255, 255, 255, 0.8);
@@ -141,7 +141,7 @@ class Forms extends HTMLElement {
 
             &:hover,
             &:focus {
-              border: 2px solid #8d54e8;
+              border: 2px solid #3f3f3f;
               box-shadow: 0px 0px 0px 7px rgb(74, 157, 236, 20%);
             }
           }
