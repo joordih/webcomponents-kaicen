@@ -1,20 +1,20 @@
 import { Order } from "../../models/order";
 
-exports.findAll = (req, res) => {
-  const orders: Order[] = Order.all();
+exports.findAll = async (req, res) => {
+  const orders: Order[] = await Order.findAll({ paranoid: true });
   
   if (orders.length === 0) {
-    res.json({ message: 'No orders found' });
+    res.status(404).json({ message: 'No orders found' });
     return;
   }
 
   res.json(orders);
 };
 
-exports.findOne = (req, res) => {
+exports.findOne = async (req, res) => {
   const { id } = req.query;
 
-  const order: Order | undefined = Order.find(Number(id));
+  const order: Order | undefined = await Order.findByPk(Number(id));
 
   if (!order) {
     res.status(404).json({ message: 'Order not found' });
@@ -24,52 +24,49 @@ exports.findOne = (req, res) => {
   res.json(order);
 };
 
-exports.create = (req, res) => {
-  const { name, email, date_of_creation, date_of_update } = req.query;
-
-  const newOrder: Order = new Order({
-    name: name as string,
-    email: email as string,
-    date_of_creation: date_of_creation as string,
-    date_of_update: date_of_update as string
+exports.create = async (req, res) => {
+  const { name, email } = req.body;
+  
+  const newOrder = await Order.create({
+    name: name,
+    email: email
   });
 
   res.json(newOrder);
 };
 
-exports.delete = (req, res) => {
+exports.delete = async (req, res) => {
   const { id } = req.query;
 
-  const order: Order | undefined = Order.find(Number(id));
+  const order: Order | undefined = await Order.findByPk(Number(id));
 
   if (!order) {
-    res.json({ message: 'Order not found' });
+    res.status(404).json({ message: 'Order not found' });
     return;
   }
 
-  order.remove();
+  order.destroy();
 
   res.json({ messa: 'Order deleted' });
 };
 
-exports.update = (req, res) => {
-  const { id, name, email, date_of_update } = req.body;
+exports.update = async (req, res) => {
+  const { id, name, email } = req.body;
 
   if (!id) {
     return res.json({ message: 'Order ID is required' });
   }
   
-  const order: Order | undefined = Order.find(Number(id));
+  const order: Order | undefined = await Order.findByPk(Number(id));
   
   if (!order) {
-    return res.json({ message: 'Order not found' });
+    return res.status(404).json({ message: 'Order not found' });
   }
   
-  order.name = name;
-  order.email = email;
-  order.date_of_update = date_of_update;
-
-  order.save();
+  order.update({
+    name: name,
+    email: email
+  });
 
   res.json(order);
 };

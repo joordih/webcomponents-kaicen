@@ -335,7 +335,7 @@ class Forms extends HTMLElement {
       return acc
     }, {})
 
-    const response = await fetch('http://localhost:8080/admin/orders/update', {
+    const response = await fetch('http://localhost:8080/api/admin/orders/', {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json'

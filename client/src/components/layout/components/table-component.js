@@ -14,7 +14,7 @@ class Table extends HTMLElement {
       this.render()
     })
 
-    await fetch('http://localhost:8080/admin/orders')
+    await fetch('http://localhost:8080/api/admin/orders')
       .then(response => response.json())
       .then(data => {
         if (data.message === 'No orders found') {
@@ -212,7 +212,7 @@ class Table extends HTMLElement {
 
         document.querySelector('#popup-component').shadowRoot.querySelector('#continue-button').addEventListener('click', async () => {
           try {
-            const response = await fetch(`http://localhost:8080/admin/orders/delete?id=${dataId}`, {
+            const response = await fetch(`http://localhost:8080/api/admin/orders/?id=${dataId}`, {
               method: 'DELETE',
               headers: {
                 'Content-Type': 'application/json'
@@ -259,7 +259,7 @@ class Table extends HTMLElement {
 
   checkItemType ({ value, order }) {
     switch (value) {
-      case 'date_of_creation':
+      case 'createdAt':
         return new Date(order[value]).toISOString().slice(0, 10)
       case 'date_of_update':
         return new Date(order[value]).toISOString().slice(0, 10)

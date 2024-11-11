@@ -3,10 +3,10 @@ module.exports = (app) => {
   const controller = require('../controllers/admin/order-controller');
   
   router.get('/', controller.findAll);
-  router.post('/create', controller.create);
-  router.delete('/delete', controller.delete)
-  router.put('/update', controller.update);
-  router.get('/find', controller.findOne);
+  router.post('/', controller.create);
+  router.delete('/', controller.delete)
+  router.put('/', controller.update);
+  router.get('/:{id}', controller.findOne);
   
-  app.use('/admin/orders', router);
+  app.use('/api/admin/orders', router);
 }
