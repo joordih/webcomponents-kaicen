@@ -56,7 +56,7 @@ class Table extends HTMLElement {
           justify-content: flex-start;
           align-items: center;
           overflow-y: scroll;
-          max-height: 80vh;
+          height: 81.4vh;
         }
 
         tr[class*="order-card"] {
