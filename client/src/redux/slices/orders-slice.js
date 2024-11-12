@@ -3,6 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 export const ordersSlice = createSlice({
   name: 'orders',
   initialState: {
+    queuedUpdate: false,
     orders: [],
     searchTerm: '',
     count: 0
@@ -32,6 +33,9 @@ export const ordersSlice = createSlice({
     },
     incrementCount: (state) => {
       state.count++
+    },
+    setQueuedUpdate: (state, action) => {
+      state.queuedUpdate = action.payload
     }
   }
 })
@@ -44,7 +48,8 @@ export const {
   clearOrders,
   setSearchTerm,
   setCount,
-  incrementCount
+  incrementCount,
+  setQueuedUpdate
 } = ordersSlice.actions
 
 export default ordersSlice.reducer

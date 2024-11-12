@@ -60,25 +60,26 @@ exports.findOne = async (req, res) => {
   }
 };
 
-exports.create = async (req, res) => {
+exports.create = async (req, res, next) => {
   try {
     const newOrder = await Order.create(req.body);
+    console.log(newOrder);
     res.send(newOrder);
   } catch (error) {
-    throw new Error('Order not created');
+    next(error);
   }
 };
 
-exports.delete = async (req, res) => {
+exports.delete = async (req, res, next) => {
   try {
-    const id = req.param.id;
+    const id = req.params.id;
 
     const order: Order | undefined = await Order.findByPk(id);
     order.destroy();
 
     res.send({ message: 'Order deleted' });
   } catch (error) {
-    throw new Error('Order not found');
+    next(error);
   }
 };
 

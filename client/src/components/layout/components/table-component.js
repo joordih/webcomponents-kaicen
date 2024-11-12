@@ -4,7 +4,7 @@ import orderDeleteSvg from '@icons/order-delete-icon.svg?raw'
 import orderEditSvg from '@icons/order-edit-icon.svg?raw'
 import plusSvg from '@icons/plus-icon.svg?raw'
 import { createElement, editElement } from '@redux/slices/forms-slice.js'
-import { addOrders, clearOrders, removeOrder, setSearchTerm, setCount } from '@redux/slices/orders-slice.js'
+import { addOrders, clearOrders, removeOrder, setSearchTerm, setCount, setQueuedUpdate } from '@redux/slices/orders-slice.js'
 import { store } from '@redux/store.js'
 
 import style from '@assets/table-component.css?inline'
@@ -26,7 +26,12 @@ class Table extends HTMLElement {
   }
 
   connectedCallback () {
-    this.unsubscribe = store.subscribe(() => {
+    this.unsubscribe = store.subscribe(async () => {
+      if (store.getState().orders.queuedUpdate) {
+        await store.dispatch(setQueuedUpdate(false))
+        await this.performSearch()
+      }
+
       this.render()
     })
     this.performSearch()
@@ -98,6 +103,8 @@ class Table extends HTMLElement {
       }
 
       store.dispatch(setCount(data.count))
+      
+      this.render()
     } catch (error) {
       if (error.name !== 'AbortError') {
         console.error('Error en búsqueda:', error)
@@ -232,7 +239,7 @@ class Table extends HTMLElement {
       .querySelector('#continue-button')
       .addEventListener('click', async () => {
         try {
-          const response = await fetch(`http://localhost:8080/api/admin/orders/?id=${order.id}`, {
+          const response = await fetch(`http://localhost:8080/api/admin/orders/${order.id}`, {
             method: 'DELETE',
             headers: { 'Content-Type': 'application/json' }
           })
