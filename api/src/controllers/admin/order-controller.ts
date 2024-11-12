@@ -1,40 +1,51 @@
 import { Op } from "sequelize";
 import { Order } from "../../models/order";
 
-exports.findAll = async (req, res) => {
+exports.findAll = async (req, res, next) => {
   try {
-    const limit = parseInt(req.query.limit) || 5;
-    const offset = parseInt(req.query.offset) || 0;
+    const limit = parseInt(req.params.limit) || 5;
+    const offset = parseInt(req.params.offset) || 0;
 
-    // const searchTerms = req.query.search || null;
-    
-    // if (!searchTerms) {
-    //   const result = await Order.findAndCountAll({
-    //     limit, offset, 
-    //     include: ['name', 'email', 'createdAt', 'updatedAt'],
-    //     paranoid: true
-    //   });
-    //   res.send(result);
-    //   return;
-    // }
+    const searchTerms = req.query.search || null;
 
-    // const filters = {
-    //   [Op.or]: [
-    //     { name: { [Op.like]: `%${searchTerms}%` } },
-    //     { email: { [Op.like]: `%${searchTerms}%` } }
-    //   ]
-    // }
+    if (!searchTerms) {
+      const result = await Order.findAndCountAll({
+        limit: limit,
+        offset: offset,
+        attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
+        paranoid: true
+      });
+      res.send(result);
+      return;
+    }
+
+    const filters = {
+      [Op.or]: [
+        { name: { [Op.like]: `%${searchTerms}%` } },
+        { email: { [Op.like]: `%${searchTerms}%` } }
+      ]
+    }
 
     const result = await Order.findAndCountAll({
-       limit: limit,
-       offset: offset,
-       include: ['name', 'email', 'createdAt', 'updatedAt'],
-       paranoid: true
-      });
+      where: filters,
+      limit: limit,
+      offset: offset,
+      attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
+      paranoid: true
+    });
 
     res.send(result);
   } catch (error) {
-    throw new Error('Orders not found');
+    next(error)
+  }
+};
+
+exports.size = async (req, res, next) => {
+  try {
+    const count = await Order.findAll({ paranoid: true });
+    res.send({ count: count.length });
+  } catch (error) {
+    next(error)
   }
 };
 
@@ -49,7 +60,7 @@ exports.findOne = async (req, res) => {
   }
 };
 
-exports.create = async (req, res) => {  
+exports.create = async (req, res) => {
   try {
     const newOrder = await Order.create(req.body);
     res.send(newOrder);
@@ -76,7 +87,7 @@ exports.update = async (req, res) => {
     const { id, name, email } = req.body;
 
     const order: Order | undefined = await Order.findByPk(Number(id));
-    
+
     order.update({
       name: name,
       email: email
