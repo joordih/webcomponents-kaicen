@@ -28,6 +28,11 @@ module.exports = {
       },
       deletedAt: {
         type: Sequelize.DATE
+      },
+      published: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: false
       }
     })
   },

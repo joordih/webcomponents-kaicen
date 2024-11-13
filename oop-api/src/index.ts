@@ -11,11 +11,7 @@ export default class Server {
   }
 
   private config(app: Application): void {
-    const corsOptions: CorsOptions = {
-      origin: '*',
-    };
-
-    app.use(cors(corsOptions));
+    app.use(cors());
     app.use(express.json());
     app.use(express.urlencoded({ extended: true }));
   }

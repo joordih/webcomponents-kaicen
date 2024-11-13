@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from "express";
-import { Op } from "sequelize";
 import Order from "../models/order";
 import orderRepository from "../repositories/order.repository";
 
@@ -11,7 +10,7 @@ export default class OrderController {
     }
 
     try {
-      const order: Order = req.body;
+      const order: Order = { ...req.body };
       if (!order.published) order.published = false;
 
       const savedOrder = await orderRepository.save(order);
@@ -26,7 +25,7 @@ export default class OrderController {
     try {
       const limit: number = parseInt(req.params.limit) || 5;
       const offset: number = parseInt(req.params.offset) || 0;
-      const searchTerms: string = req.query.search.toString() || null;
+      const searchTerms: string = typeof req.query.search === 'string' ? req.query.search : null;
 
       const orders = await orderRepository.getAll(limit, offset, searchTerms);
 
@@ -68,13 +67,7 @@ export default class OrderController {
     let order: Order = req.body;
 
     try {
-      const orderNum = await orderRepository.update(order);
-
-      if (orderNum == 1) {
-        res.status(200).send({ message: 'Order updated' });
-      } else {
-        res.status(404).send({ message: `Order not found with id ${order.id}` });
-      }
+      res.status(200).send(await orderRepository.update(order));
     } catch (error) {
       next(error);
     }

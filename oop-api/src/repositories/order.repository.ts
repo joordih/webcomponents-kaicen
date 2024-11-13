@@ -1,17 +1,19 @@
 import { Op } from "sequelize";
 import Order from "../models/order";
+import e from "express";
 
 interface IOrderRepository {
   save(order: Order): Promise<Order>;
-  getAll(limit?: number, offset?: number, searchTerms?: string ): Promise<{ rows: Order[], count: number }>;
+  getAll(limit?: number, offset?: number, searchTerms?: string): Promise<{ rows: Order[], count: number }>;
   getById(id: number): Promise<Order | null>;
   delete(id: number): Promise<number>;
-  update(Order: Order): Promise<number>;
+  update(Order: Order): Promise<Order>;
 }
 
 class OrderRepository implements IOrderRepository {
   async save(order: Order): Promise<Order> {
     try {
+      console.log(order);
       return await Order.create({
         name: order.name,
         email: order.email,
@@ -32,14 +34,14 @@ class OrderRepository implements IOrderRepository {
           paranoid: true
         });
       }
-  
+
       const filters = {
         [Op.or]: [
           { name: { [Op.like]: `%${searchTerms}%` } },
           { email: { [Op.like]: `%${searchTerms}%` } }
         ]
       }
-  
+
       return await Order.findAndCountAll({
         where: filters,
         limit: limit,
@@ -67,18 +69,16 @@ class OrderRepository implements IOrderRepository {
       throw new Error("Error deleting order");
     }
   }
-  async update(Order: Order): Promise<number> {
-    const { id, name, email, createdAt, updatedAt } = Order;
-    
+  async update(Order: Order): Promise<Order> {
+    const { id, name, email } = Order;
+
     try {
-      const affectedRows = await Order.update(
-        { name, email, createdAt, updatedAt },
-         { where: { id } }
-      );
-      
-      return affectedRows[0];
+      const order = await this.getById(id);
+      await order?.update({ name, email });
+
+      return order;
     } catch (error) {
-      throw new Error("Error updating order");
+      throw new Error(error);
     }
   }
 }

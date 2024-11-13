@@ -35,12 +35,12 @@ export default class Order extends Model {
   })
   published?: boolean;
 
-  @Column({ type: DataType.DATE, field: 'created_at' })
+  @Column({ type: DataType.DATE, field: 'createdAt' })
   readonly createdAt?: Date;
 
-  @Column({ type: DataType.DATE, field: 'updated_at' })
+  @Column({ type: DataType.DATE, field: 'updatedAt' })
   readonly updatedAt?: Date;
 
-  @Column({ type: DataType.DATE, field: 'deleted_at' })
+  @Column({ type: DataType.DATE, field: 'deletedAt' })
   readonly deletedAt?: Date;
 }
