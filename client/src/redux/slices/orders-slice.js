@@ -34,6 +34,9 @@ export const ordersSlice = createSlice({
     incrementCount: (state) => {
       state.count++
     },
+    decrementCount: (state) => {
+      state.count--
+    },
     setQueuedUpdate: (state, action) => {
       state.queuedUpdate = action.payload
     }
@@ -49,6 +52,7 @@ export const {
   setSearchTerm,
   setCount,
   incrementCount,
+  decrementCount,
   setQueuedUpdate
 } = ordersSlice.actions
 

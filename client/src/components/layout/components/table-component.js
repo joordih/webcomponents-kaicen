@@ -4,7 +4,7 @@ import orderDeleteSvg from '@icons/order-delete-icon.svg?raw'
 import orderEditSvg from '@icons/order-edit-icon.svg?raw'
 import plusSvg from '@icons/plus-icon.svg?raw'
 import { createElement, editElement } from '@redux/slices/forms-slice.js'
-import { addOrders, clearOrders, removeOrder, setSearchTerm, setCount, setQueuedUpdate } from '@redux/slices/orders-slice.js'
+import { addOrders, clearOrders, removeOrder, setSearchTerm, setCount, setQueuedUpdate, decrementCount } from '@redux/slices/orders-slice.js'
 import { store } from '@redux/store.js'
 
 import style from '@assets/table-component.css?inline'
@@ -245,6 +245,7 @@ class Table extends HTMLElement {
           })
           if (response.ok) {
             store.dispatch(removeOrder(order.id))
+            store.dispatch(decrementCount())
             orderCard.remove()
           }
         } catch (error) {

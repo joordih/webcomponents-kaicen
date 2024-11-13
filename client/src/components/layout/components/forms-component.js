@@ -63,18 +63,23 @@ class Forms extends HTMLElement {
       const isActive = tab === currentTab
       const tabElement = this.shadow.querySelector(selector)
       const buttonElement = this.shadow.querySelector(buttonId)
+
+      console.log({ tab, selector, buttonId, isActive, tabElement, buttonElement })
       
       if (tabElement) {
+        console.log('tabElement: ' + tabElement)
         tabElement.style.display = isActive ? 'grid' : 'none'
       }
       
       if (buttonElement) {
+        console.log('buttonElement: ' + buttonElement)
         isActive ? buttonElement.classList.add('active') : buttonElement.classList.remove('active')
       }
     })
 
     const createButtonTab = this.shadow.querySelector('.create-button-tab')
     if (createButtonTab) {
+      console.log('createButtonTab: ' + createButtonTab)
       createButtonTab.style.display = currentTab === 'create' ? 'flex' : 'none'
     }
   }
@@ -106,7 +111,11 @@ class Forms extends HTMLElement {
 
   async saveOrder () {
     const orderForm = this.getFormData('.general-tab')
-    const response = await this.sendRequest('PUT', orderForm)
+    const response = await this.sendRequest('PUT', {
+      id: orderForm.id,
+      name: orderForm.name,
+      email: orderForm.email
+    })
     
     if (response.ok) {
       await store.dispatch(editOrder(orderForm))
@@ -116,9 +125,13 @@ class Forms extends HTMLElement {
 
   async createOrder () {
     const orderForm = this.getFormData('.create-tab')
-    const response = await this.sendRequest('POST', orderForm)
+    const response = await this.sendRequest('POST', {
+      name: orderForm.name,
+      email: orderForm.email
+    })
     
     if (response.ok) {
+      console.log(store.getState().forms.currentTab)
       store.dispatch(incrementCount())
       store.dispatch(setQueuedUpdate(true))
       this.render()
@@ -137,7 +150,7 @@ class Forms extends HTMLElement {
 
   async sendRequest (method, data) {
     console.log({ method, data })
-    return fetch('http://localhost:8080/api/admin/orders/', {
+    return await fetch('http://localhost:8080/api/admin/orders/', {
       method,
       headers: {
         'Content-Type': 'application/json'
