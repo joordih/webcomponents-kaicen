@@ -1,6 +1,5 @@
 import { store } from '@redux/store.js'
 import { addElement, setCurrentTab } from '@redux/slices/forms-slice.js'
-import { editOrder } from '@redux/slices/orders-slice.js'
 import { setQueuedUpdate, incrementCount } from '@redux/slices/orders-slice'
 
 import generalSvg from '@icons/general-icon.svg?raw'
@@ -64,22 +63,17 @@ class Forms extends HTMLElement {
       const tabElement = this.shadow.querySelector(selector)
       const buttonElement = this.shadow.querySelector(buttonId)
 
-      console.log({ tab, selector, buttonId, isActive, tabElement, buttonElement })
-      
       if (tabElement) {
-        console.log('tabElement: ' + tabElement)
         tabElement.style.display = isActive ? 'grid' : 'none'
       }
       
       if (buttonElement) {
-        console.log('buttonElement: ' + buttonElement)
         isActive ? buttonElement.classList.add('active') : buttonElement.classList.remove('active')
       }
     })
 
     const createButtonTab = this.shadow.querySelector('.create-button-tab')
     if (createButtonTab) {
-      console.log('createButtonTab: ' + createButtonTab)
       createButtonTab.style.display = currentTab === 'create' ? 'flex' : 'none'
     }
   }
@@ -111,6 +105,7 @@ class Forms extends HTMLElement {
 
   async saveOrder () {
     const orderForm = this.getFormData('.general-tab')
+    console.log('general-tab: ' + orderForm)
     const response = await this.sendRequest('PUT', {
       id: orderForm.id,
       name: orderForm.name,
@@ -118,13 +113,29 @@ class Forms extends HTMLElement {
     })
     
     if (response.ok) {
-      await store.dispatch(editOrder(orderForm))
-      this.render()
+      store.dispatch(setQueuedUpdate(true))
+
+      const currentTab = store.getState().forms.currentTab
+      await Promise.resolve().then(() => {
+        const inputs = this.shadow.querySelectorAll(`div.inputs${this.tabs[currentTab].selector} > div > input`)
+        inputs.forEach(input => {
+          input.value = ''
+          store.dispatch(addElement({
+            id: input.id,
+            element: {
+              value: '',
+              type: input.type || undefined,
+              placeholder: input.placeholder
+            }
+          }))
+        })
+      })
     }
   }
 
   async createOrder () {
     const orderForm = this.getFormData('.create-tab')
+    console.log('create-tab: ' + orderForm)
     const response = await this.sendRequest('POST', {
       name: orderForm.name,
       email: orderForm.email

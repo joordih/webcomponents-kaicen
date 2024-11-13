@@ -3,7 +3,7 @@ import arrowRightSvg from '@icons/arrow-right-icon.svg?raw'
 import orderDeleteSvg from '@icons/order-delete-icon.svg?raw'
 import orderEditSvg from '@icons/order-edit-icon.svg?raw'
 import plusSvg from '@icons/plus-icon.svg?raw'
-import { createElement, editElement } from '@redux/slices/forms-slice.js'
+import { createElement, editElement, setCurrentTab } from '@redux/slices/forms-slice.js'
 import { addOrders, clearOrders, removeOrder, setSearchTerm, setCount, setQueuedUpdate, decrementCount } from '@redux/slices/orders-slice.js'
 import { store } from '@redux/store.js'
 
@@ -23,6 +23,8 @@ class Table extends HTMLElement {
     this.debouncedSearch = this.debounce(this.performSearch.bind(this), 1000)
 
     this.unsubscribe = null
+
+    this.boundHandleTableClick = this.handleTableClick.bind(this)
   }
 
   connectedCallback () {
@@ -160,6 +162,8 @@ class Table extends HTMLElement {
   }
 
   render () {
+    this.disconnectEventListeners()
+
     const orders = store.getState().orders
     const searchTerm = store.getState().orders.searchTerm
 
@@ -207,20 +211,11 @@ class Table extends HTMLElement {
       }
     })
 
-    this.shadow.querySelector('#orders tbody').addEventListener('click', e => {
-      const orderCard = e.target.closest('.order-card')
-      if (!orderCard) return
-
-      const orderId = orderCard.dataset.id
-      const order = store.getState().orders.orders.find(o => o.id === Number(orderId))
-      if (!order) return
-
-      if (e.target.closest('.delete-button')) {
-        this.handleDelete(order, orderCard)
-      } else if (e.target.closest('.edit-button')) {
-        this.handleEdit(order)
-      }
-    })
+    const tbody = this.shadow.querySelector('#orders tbody')
+    if (tbody) {
+      tbody.removeEventListener('click', this.boundHandleTableClick)
+      tbody.addEventListener('click', this.boundHandleTableClick)
+    }
 
     this.shadow.querySelector('#create-button').addEventListener('click', () => {
       const inputs = store.getState().forms.inputs
@@ -231,6 +226,29 @@ class Table extends HTMLElement {
     
     this.shadow.querySelector('.paginator-next').addEventListener('click', this.handleNextPage)
     this.shadow.querySelector('.paginator-previous').addEventListener('click', this.handlePrevPage)
+  }
+
+  disconnectEventListeners () {
+    const tbody = this.shadow.querySelector('#orders tbody')
+    if (tbody) {
+      tbody.removeEventListener('click', this.boundHandleTableClick)
+    }
+  }
+
+  handleTableClick (event) {
+    const orderCard = event.target.closest('.order-card')
+    if (!orderCard) return
+  
+    const orderId = orderCard.dataset.id
+    const order = store.getState().orders.orders.find(o => o.id === Number(orderId))
+    if (!order) return
+  
+    if (event.target.closest('.delete-button')) {
+      this.handleDelete(order, orderCard)
+    } else if (event.target.closest('.edit-button')) {
+      this.handleEdit(order)
+      store.dispatch(setCurrentTab('general'))
+    }
   }
 
   handleDelete (order, orderCard) {
@@ -253,11 +271,13 @@ class Table extends HTMLElement {
         }
       })
   }
-
+  
   handleEdit (order) {
+    store.dispatch(setCurrentTab('general'))
+  
     Object.entries(order).forEach(([key, value]) => {
       store.dispatch(editElement({
-        id: key,
+        id: `${key}`,
         element: { 
           value: ['createdAt', 'updatedAt'].includes(key) 
             ? new Date(value).toISOString().slice(0, 10) 
