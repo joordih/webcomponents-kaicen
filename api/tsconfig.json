@@ -10,13 +10,14 @@
     "useDefineForClassFields": false,
     "sourceMap": true,
     "outDir": "dist",
-  },
-  "paths": {
-    "@/*": ["src/*"],
-    "@routes/": ["src/routes/*"],
-    "@controllers/": ["src/controllers/*"],
-    "@models/": ["src/models/*"],
+    "baseUrl": ".",
+    "paths": {
+      "@config/*": ["src/config/*"],
+      "@routes/*": ["src/routes/*"],
+      "@controllers/*": ["src/controllers/*"],
+      "@repositories/*": ["src/repositories/*"],
+      "@models/*": ["src/models/*"],
+    },
   },
   "lib": ["ES2023"],
-  
 }

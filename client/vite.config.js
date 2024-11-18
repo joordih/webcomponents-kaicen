@@ -2,7 +2,8 @@ import { defineConfig } from 'vite'
 import path from 'path'
 
 export default defineConfig({
-  assetsInclude: ['**/icons/*.svg', 'assets/*.css'],
+  base: '/admin',
+  assetsInclude: ['**/icons/*.svg', 'assets/*.css', '**/*.html?inline'],
   build: {
     assetsInlineLimit: 0
   },
@@ -12,7 +13,8 @@ export default defineConfig({
       '@components': path.resolve(__dirname, './src/components'),
       '@redux': path.resolve(__dirname, './src/redux'),
       '@icons': path.resolve(__dirname, './src/assets/icons'),
-      '@assets': path.resolve(__dirname, './src/assets')
+      '@assets': path.resolve(__dirname, './src/assets'),
+      '@pages': path.resolve(__dirname, './src/pages')
     }
   },
   preview: {

@@ -2,6 +2,7 @@ class Header extends HTMLElement {
   constructor () {
     super()
     this.shadow = this.attachShadow({ mode: 'open' })
+    this.title = this.getAttribute('title') || 'Admin Panel'
   }
 
   connectedCallback () {
@@ -26,7 +27,7 @@ class Header extends HTMLElement {
 
     <header>
       <nav>
-        <title-component title="Pedidos"></title-component>
+        <title-component title="${this.title}"></title-component>
         <menu-component></menu-component>
       </nav>
     </header>

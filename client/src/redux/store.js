@@ -1,11 +1,15 @@
 import { configureStore } from '@reduxjs/toolkit'
-import formsSlice from './slices/forms-slice.js'
-import ordersSlice from './slices/orders-slice.js'
+import ordersFormSlice from './slices/orders/forms-slice.js'
+import ordersSlice from './slices/orders/orders-slice.js'
+import usersFormSlice from './slices/users/forms-slice.js'
+import usersSlice from './slices/users/users-slice.js'
 
 export const store = configureStore({
   reducer: {
-    forms: formsSlice,
-    orders: ordersSlice
+    orders_forms: ordersFormSlice,
+    orders: ordersSlice,
+    users_forms: usersFormSlice,
+    users: usersSlice
   }
 })
 

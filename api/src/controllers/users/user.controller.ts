@@ -1,0 +1,75 @@
+import { Request, Response, NextFunction } from 'express';
+import User from '@models/user';
+import userRepository from '@repositories/user.repository';
+
+export default class UserController {
+  async create(req: Request, res: Response, next: NextFunction) {
+    if (!req.body.name || !req.body.email) {
+      next('Name and email are required');
+      return;
+    }
+
+    try {
+      const user: User = { ...req.body };
+      if (!user.published) user.published = false;
+
+      const savedUser = await userRepository.save(user);
+
+      res.status(201).json(savedUser);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async findAll(req: Request, res: Response, next: NextFunction) {
+    try {
+      const limit: number = parseInt(req.params.limit) || 5;
+      const offset: number = parseInt(req.params.offset) || 0;
+      const searchTerms: string = typeof req.query.search === 'string' ? req.query.search : null;
+
+      const users = await userRepository.getAll(limit, offset, searchTerms);
+
+      res.status(200).send(users);
+    } catch (error) {
+      next(error)
+    }
+  }
+
+  async findOne (req: Request, res: Response, next: NextFunction) {
+    const id: number = parseInt(req.params.id);
+
+    try {
+      const user = await userRepository.getById(id);
+
+      if (user) res.status(200).send(user);
+    } catch (error) {
+      next(error);
+    }
+  }
+
+  async delete (req: Request, res: Response, next: NextFunction) {
+    const id: number = parseInt(req.params.id);
+
+    try {
+      const deletedNumber = await userRepository.delete(id);
+
+      if (deletedNumber == 1) {
+        res.status(200).send({ message: 'User deleted' });
+      } else {
+        res.status(404).send({ message: `User not found with id ${id}` });
+      }
+    } catch (error) {	
+      next(error);
+    }
+  }
+
+  async update (req: Request, res: Response, next: NextFunction) {
+    let user: User = req.body;
+
+    try {
+      res.status(200).send(await userRepository.update(user));
+    } catch (error) {
+      next(error);
+    }
+  }
+}
