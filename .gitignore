@@ -1,3 +1,6 @@
 node_modules
 ./api/src/config/config.json
 api/src/config/config.json
+
+oop-api/
+api/src/config/database.config.ts

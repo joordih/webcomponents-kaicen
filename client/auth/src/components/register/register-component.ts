@@ -85,7 +85,18 @@ class RegisterComponent extends HTMLElement {
             <div class="inputs">
               <input id="password" type="password" placeholder="Enter your password">
               <input id="repeat-password" type="password" placeholder="Repeat your password">
-
+              <div class="checkbox-wrapper-4">
+                <input class="inp-cbx" id="morning" type="checkbox">
+                <label class="cbx" for="morning"><span>
+                <svg width="12px" height="10px">
+                  
+                </svg></span><span>Show password</span></label>
+                <svg class="inline-svg">
+                  <symbol id="check-4" viewBox="0 0 12 10">
+                    <polyline points="1.5 6 4.5 9 10.5 1"></polyline>
+                  </symbol>
+                </svg>
+              </div>
               <button id="register">Register</button>
 
               <p>
@@ -99,6 +110,24 @@ class RegisterComponent extends HTMLElement {
   }
   private registerEvents() {
     const inputs = this.shadow.querySelectorAll("input");
+    const checkbox = this.shadow.querySelector('input[type="checkbox"]');
+
+    if (checkbox) {
+      checkbox.addEventListener('change', (event) => {
+        const input = event.target as HTMLInputElement;
+        const passwordInput = this.shadow.getElementById('password') as HTMLInputElement;
+        const repeatPasswordInput = this.shadow.getElementById('repeat-password') as HTMLInputElement;
+
+        if (!input.checked) {
+          passwordInput.type = "password";
+          repeatPasswordInput.type = "password";
+        } else {
+          passwordInput.type = "text";
+          repeatPasswordInput.type = "text";
+        }
+      });
+    }
+    
     inputs.forEach(input => {
       input.addEventListener('input', () => {
         const passwordInput = this.shadow.getElementById('password') as HTMLInputElement;
@@ -147,7 +176,7 @@ class RegisterComponent extends HTMLElement {
     if (valid) {
       validator.classList.add('success');
       validator.classList.remove('error');
-       
+
       error.classList.remove('active');
       success.classList.add('active');
     } else {

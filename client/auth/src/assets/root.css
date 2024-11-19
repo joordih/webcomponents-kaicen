@@ -29,6 +29,7 @@
 
   .dark {
     --background: hsl(240, 10%, 3.9%);
+    --background-2: hsl(240, 6%, 10%);
     --foreground: hsl(0, 0%, 98%);
     --card: hsl(240, 10%, 3.9%);
     --card-foreground: hsl(0, 0%, 98%);
@@ -57,6 +58,7 @@
 
 * {
   font-family: 'Geist Mono', monospace;
+  cursor: crosshair;
 }
 
 body {
