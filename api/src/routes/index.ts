@@ -1,12 +1,16 @@
 import { Application } from "express";
-import routerRoutes from "./admin/router.routes";
+
+import authRouter from "./auth/router.routes";
+import adminRouter from "./admin/router.routes";
+
 import ordersRoutes from "./admin/orders/orders.routes";
 import usersRoute from "./admin/users/users.route";
 
 export default class Route {
   constructor(app: Application) {
     
-    app.use('/api/admin/routes', routerRoutes);
+    app.use('/api/auth/routes', authRouter);
+    app.use('/api/admin/routes', adminRouter);
 
     app.use('/api/admin/orders', ordersRoutes);
     app.use('/api/admin/users', usersRoute);

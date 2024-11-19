@@ -1,0 +1,209 @@
+.container {
+  display: grid;
+  grid-template-columns: repeat(2, 3fr);
+  grid-template-rows: repeat(auto, 1fr);
+  gap: 0px 0px;
+  grid-auto-flow: row;
+  grid-template-areas:
+    "art forms"
+    "art forms"
+    "art forms";
+
+  height: 100vh;
+
+  --s: 200px;
+  --c1: rgba(29, 29, 29);
+  --c2: rgba(78, 79, 81);
+  --c3: rgba(60, 60, 60);
+
+  background: repeating-conic-gradient(from 30deg,
+      #0000 0 120deg,
+      var(--c3) 0 180deg) calc(0.5 * var(--s)) calc(0.5 * var(--s) * 0.577),
+    repeating-conic-gradient(from 30deg,
+      var(--c1) 0 60deg,
+      var(--c2) 0 120deg,
+      var(--c3) 0 180deg);
+  background-size: var(--s) calc(var(--s) * 0.577);
+
+  .art {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+
+    background-color: hsla(240, 10%, 4%, 0.863);
+    padding: 1rem;
+
+    background-color: var(muted);
+    font-family: 'Geist Mono', monospace;
+
+    grid-area: art;
+
+    .title {
+      display: flex;
+
+      svg {
+        padding: 1rem 0rem 1rem 0rem;
+      }
+
+      p {
+        padding: 0.7rem 1rem 1rem 0rem;
+      }
+    }
+
+    .footer {
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      margin-top: auto;
+      margin-bottom: 1rem;
+
+      p:is(:first-child) {
+        font-size: 1.1rem;
+        font-style: italic;
+        font-weight: 500;
+        padding: 0;
+        margin: 0;
+      }
+
+      p:is(:last-child) {
+        font-size: 0.9rem;
+        font-weight: 400;
+        color: var(--muted-foreground);
+        padding: 0;
+        margin: 0;
+      }
+    }
+  }
+
+  .forms {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+
+    padding: 1rem;
+
+    background-color: hsla(240, 10%, 4%, 0.966);
+    backdrop-filter: blur(10px);
+
+    border-top-left-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+    font-family: 'Geist Mono', monospace;
+
+    grid-area: forms;
+
+    .change-auth {
+      display: flex;
+      margin-left: auto;
+      height: 20vh;
+
+      h2 {
+        margin-bottom: auto;
+        font-size: 1.5rem;
+        font-weight: 500;
+        color: var(--primary);
+
+        &:hover,
+        &:focus {
+          color: var(--muted-foreground);
+          font-style: italic;
+        }
+      }
+    }
+
+    h1 {
+      text-align: center;
+      font-size: 2.5rem;
+      font-weight: 500;
+      color: var(--primary);
+      margin-bottom: 0rem;
+      padding-bottom: 0rem;
+    }
+
+    p {
+      text-align: center;
+      font-size: 0.9rem;
+      font-weight: 400;
+      color: var(--muted-foreground);
+      margin-top: 10px;
+      margin-bottom: 1.5rem;
+    }
+
+    p.success {
+      color: var(--chart-2);
+      padding: 0;
+      margin: 0;
+    }
+
+    p>svg {
+      position: relative;
+      top: 3px;
+      padding: 0;
+      margin: 0;
+    }
+
+    p>svg.active {
+      display: inline-block;
+    }
+
+    p>svg:not(active) {
+      display: none;
+    }
+
+    p.error {
+      color: var(--destructive);
+      padding: 0;
+      margin: 0;
+    }
+
+    .inputs {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      align-items: center;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+
+      input {
+        border: 1px solid var(--border);
+        height: 2.5em;
+        padding-left: 0.8em;
+        width: 350px;
+        outline: none;
+        overflow: hidden;
+        background-color: var(--background);
+        color: var(--background-foreground);
+        border-radius: 0.2rem;
+        transition: all 0.5s;
+
+        &:hover,
+        &:focus {
+          border: 1px solid white;
+          box-shadow: 0px 0px 0px 4.5px var(--input);
+        }
+      }
+
+      button {
+        font-family: 'Geist Mono', monospace;
+        color: var(--secondary);
+        background-color: var(--foreground);
+        border-radius: 0.3rem;
+        margin-top: 1rem;
+        width: 365px;
+        height: 2.5em;
+
+        &:hover,
+        &:focus {
+          opacity: 75%;
+        }
+      }
+
+      p {
+        width: 60%;
+
+        a {
+          color: white;
+        }
+      }
+    }
+  }
+}

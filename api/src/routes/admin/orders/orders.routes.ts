@@ -1,5 +1,5 @@
 import { Router } from "express";
-import OrderController from "@controllers/orders/order.controller";
+import OrderController from "@controllers/admin/orders/order.controller";
 
 class OrderRoutes {
   router = Router();

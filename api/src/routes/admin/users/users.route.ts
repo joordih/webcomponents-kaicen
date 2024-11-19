@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import UserController from  '@controllers/users/user.controller';
+import UserController from  '@controllers/admin/users/user.controller';
 
 class UserRoutes {
   router = Router();

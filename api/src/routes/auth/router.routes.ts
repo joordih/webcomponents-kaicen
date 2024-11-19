@@ -1,5 +1,5 @@
 import { Router } from "express";
-import RouterController from "@controllers/admin/router.controller";
+import RouterController from "@controllers/auth/router.controller";
 
 class RouterRoutes {
   router = Router();
