@@ -11,13 +11,21 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "typeRoots": [
+      "./src/types",
+      "./node_modules/@types"
+    ],
     "paths": {
       "@config/*": ["src/config/*"],
       "@routes/*": ["src/routes/*"],
       "@controllers/*": ["src/controllers/*"],
       "@repositories/*": ["src/repositories/*"],
       "@models/*": ["src/models/*"],
-    },
+      "@services/*": ["src/services/*"],
+      "@events/*": ["src/events/*"],
+      "@database/*": ["src/database/*"],
+    }
   },
+  "include": ["src"],
   "lib": ["ES2023"],
 }

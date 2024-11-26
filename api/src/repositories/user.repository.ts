@@ -2,23 +2,20 @@ import { Op } from 'sequelize';
 import User from '@models/user';
 
 interface IUserRepository {
-  save(user: User): Promise<User>;
+  save(user: Partial<User>): Promise<User>;
   getAll(limit?: number, offset?: number, searchTerms?: string): Promise<{ rows: User[], count: number }>;
   getById(id: number): Promise<User | null>;
   delete(id: number): Promise<number>;
   update(user: User): Promise<User>;
+  getUserByEmail(email: string): Promise<User | null>;
 }
 
 class UserRepository implements IUserRepository {
-  async save(user: User): Promise<User> {
+  async save(user: Partial<User>): Promise<User> {
     try {
-      return await User.create({
-        name: user.name,
-        email: user.email,
-        published: user.published
-      });
+      return await User.create(user);
     } catch (error) {
-      throw new Error('Error creating user');
+      throw new Error(error);
     }
   }
 
@@ -29,6 +26,9 @@ class UserRepository implements IUserRepository {
           limit: limit,
           offset: offset,
           attributes: ['id', 'name', 'email', 'createdAt', 'updatedAt'],
+          where: {
+            published: true
+          },
           paranoid: true
         });
       }
@@ -46,7 +46,8 @@ class UserRepository implements IUserRepository {
       const filters = {
         [Op.or]: [
           { name: { [Op.like]: `%${searchTerms}%` } },
-          { email: { [Op.like]: `%${searchTerms}%` } }
+          { email: { [Op.like]: `%${searchTerms}%` } },
+          { published: true }
         ]
       }
 
@@ -59,6 +60,15 @@ class UserRepository implements IUserRepository {
       });
     } catch (error) {
       throw new Error('Error getting users');
+    }
+  }
+  
+  async getUserByEmail(email: string): Promise<User | null> {
+    try {
+      return await User.findOne({ where: { email } });
+    }
+    catch (error) {
+      throw new Error('Error getting user by email');
     }
   }
 

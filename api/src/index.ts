@@ -1,13 +1,16 @@
 import express, { Application } from 'express';
-import cors, { CorsOptions } from 'cors';
+import cors from 'cors';
 import Route from './routes';
 import Database from './database';
+import { executeServices } from '@services/services';
 
 export default class Server {
   constructor(app: Application) {
     this.config(app);
     this.syncDatabase();
+    executeServices(app);
     new Route(app);
+
   }
 
   private config(app: Application): void {
@@ -18,6 +21,19 @@ export default class Server {
 
   private syncDatabase(): void {
     const database = new Database();
+    database.connectDatabase();
     database.sequelize?.sync();
   }
 }
+
+const app: Application = express();
+new Server(app);
+const PORT: number = 8080;
+
+app.
+  listen(PORT, () => {
+    console.log(`Server running on port ${PORT}`);
+  })
+  .on('error', (error: any) => {
+    console.log(error);
+  });

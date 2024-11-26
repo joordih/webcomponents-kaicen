@@ -1,16 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24">
-  <!-- <style>
-    .slide-6 {
-      animation: slide-6 1s infinite alternate both cubic-bezier(1, -0.01, 0, 0.98);
-    }
-    @keyframes slide-6 {
-      100% {
-        transform: translateX(2px)
-      }
-    }
-  </style> -->
-  <g class="prefix__slide-6">
-    <path class="slide-6" fill-rule="evenodd" d="M13.155 16.834a.714.714 0 001.006-.091l3.564-4.277a.711.711 0 000-.932L14.16 7.257a.714.714 0 00-1.097.915l2.565 3.078H7.9a.75.75 0 000 1.5h7.73l-2.565 3.078a.714.714 0 00.091 1.006z" clip-rule="evenodd"/>
-  </g>
+<svg xmlns="http://www.w3.org/2000/svg" width="1.7em" height="1.7em" viewBox="0 0 24 24">
+	<path fill="currentColor" d="M20.536 20.536C22 19.07 22 16.714 22 12s0-7.071-1.465-8.536C19.072 2 16.714 2 12 2S4.929 2 3.464 3.464C2 4.93 2 7.286 2 12s0 7.071 1.464 8.535C4.93 22 7.286 22 12 22s7.071 0 8.535-1.465" opacity="0.5" />
+	<path fill="currentColor" d="M8 11.25a.75.75 0 0 0 0 1.5h6.19l-1.72 1.72a.75.75 0 1 0 1.06 1.06l3-3a.75.75 0 0 0 0-1.06l-3-3a.75.75 0 1 0-1.06 1.06l1.72 1.72z" />
 </svg>

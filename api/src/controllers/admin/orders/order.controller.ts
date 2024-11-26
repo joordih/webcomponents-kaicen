@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import Order from "@models/order";
 import orderRepository from "@repositories/order.repository";
+import { Redis } from "ioredis";
 
 export default class OrderController {
   async create(req: Request, res: Response, next: NextFunction) {

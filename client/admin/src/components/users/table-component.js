@@ -117,9 +117,14 @@ class Table extends HTMLElement {
   createOrderRow () {
     const tableBody = this.shadow.querySelector('#orders tbody')
     store.getState().users.users.forEach(order => {
+      const editComponent = document.createElement('edit-component')
+      
       const row = document.createElement('tr')
+      row.setAttribute('slot', 'trigger')
       row.classList.add('user-card')
       row.dataset.id = order.id
+
+      editComponent.appendChild(row)
 
       const actionCell = document.createElement('td')
       const imageCell = document.createElement('img')
@@ -161,7 +166,8 @@ class Table extends HTMLElement {
       // row.appendChild(creationDateCell)
       // row.appendChild(updateDateCell)
 
-      tableBody.appendChild(row)
+      editComponent.appendChild(row)
+      tableBody.appendChild(editComponent)
     })
   }
 
@@ -187,11 +193,11 @@ class Table extends HTMLElement {
           ${plusSvg}
         </button-component>
         <div class="paginator-container">
-          <button-component class="paginator-previous" text="" background="transparent" background-hover="#17171A" text-color="#FAFAFA" padding="0.375rem" margin-left="0.2rem" border-radius="0.5rem">
+          <button-component class="paginator-previous" text="" background="transparent" background-hover="#" text-color="#FAFAFA" padding="0.375rem" margin-left="0.2rem" border-radius="0.5rem">
             ${arrowLeftSvg}
           </button-component>
           <span class="paginator-current">Page ${this.currentPage}/${Math.floor(orders.count / this.limit)}</span>
-          <button-component class="paginator-next" reverse-side="true" text="" background="transparent" background-hover="#17171A" text-color="#FAFAFA" padding="0.375rem" margin-left="0.2rem" border-radius="0.5rem">
+          <button-component class="paginator-next" reverse-side="true" text="" background="transparent" background-hover="#" text-color="#FAFAFA" padding="0.375rem" margin-left="0.2rem" border-radius="0.5rem">
             ${arrowRightSvg}
           </button-component>
         </div>

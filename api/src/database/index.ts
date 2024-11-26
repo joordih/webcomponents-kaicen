@@ -4,10 +4,13 @@ import fs from 'fs';
 import path from 'path';
 
 class Database {
-  public sequelize: Sequelize | undefined;
+  private _sequelize: Sequelize | undefined;
 
-  constructor() {
-    this.connectDatabase();
+  public get sequelize(): Sequelize | undefined {
+    return this._sequelize;
+  }
+  public set sequelize(value: Sequelize | undefined) {
+    this._sequelize = value;
   }
 
   private async loadModels(): Promise<any[]> {
@@ -26,7 +29,7 @@ class Database {
     return models;
   }
 
-  private async connectDatabase() {
+  public async connectDatabase() {
     const models = await this.loadModels();
 
     this.sequelize = new Sequelize({

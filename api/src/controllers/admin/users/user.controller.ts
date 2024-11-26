@@ -1,4 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
+
 import User from '@models/user';
 import userRepository from '@repositories/user.repository';
 
@@ -10,10 +11,13 @@ export default class UserController {
     }
 
     try {
-      const user: User = { ...req.body };
+      const user = { ... req.body };
       if (!user.published) user.published = false;
 
-      const savedUser = await userRepository.save(user);
+      const savedUser: User = await userRepository.save(user).then(async (user) => {
+        await req.redisClient.publish('new-user', JSON.stringify(user));
+        return user;
+      });
 
       res.status(201).json(savedUser);
     } catch (error) {
