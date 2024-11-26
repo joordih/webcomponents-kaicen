@@ -1,8 +1,8 @@
 export const config = {
   HOST: '127.0.0.1',
   USER: 'root',
-  PASSWORD: 'password',
-  DB: 'orders_2',
+  PASSWORD: '',
+  DB: 'orders',
   pool: {
     max: 5,
     min: 0,

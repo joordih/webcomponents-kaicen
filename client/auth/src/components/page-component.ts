@@ -65,6 +65,12 @@ class PageComponent extends HTMLElement {
 
     const html = await htmlResponse.text();
 
+    if (!document.startViewTransition) {
+      this.shadow.innerHTML = html;
+      document.documentElement.scrollTop = 0;
+      return;
+    }
+
     document.startViewTransition(() => {
       this.shadow.innerHTML = html;
       document.documentElement.scrollTop = 0;
