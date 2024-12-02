@@ -1,5 +1,8 @@
 import style from '@assets/components/ui/edit-menu.css?inline'
 
+import menuEditIcon from '@icons/menu-edit-icon.svg?raw'
+import menuTrashIcon from '@icons/menu-trash-icon.svg?raw'
+
 class EditComponent extends HTMLElement {
   constructor () {
     super()
@@ -26,11 +29,11 @@ class EditComponent extends HTMLElement {
         <div class="context-menu slide-in-blurred-top">
           <div class="section">
             <div class="section-title">Actions</div>
-            <div class="menu-item">
+            <!-- <div class="menu-item">
               <div class="icon">📄</div>
               <div class="menu-item-content">
                 <div class="menu-item-title">New file</div>
-                <div class="menu-item-description">Create a new file</div>
+                <div class="menu-item-description text-foreground-500">Create a new file</div>
               </div>
               <div class="shortcut">⌘N</div>
             </div>
@@ -38,15 +41,15 @@ class EditComponent extends HTMLElement {
               <div class="icon">🔗</div>
               <div class="menu-item-content">
                 <div class="menu-item-title">Copy link</div>
-                <div class="menu-item-description">Copy the file link</div>
+                <div class="menu-item-description text-foreground-500">Copy the file link</div>
               </div>
               <div class="shortcut">⌘C</div>
-            </div>
+            </div> -->
             <div class="menu-item">
-              <div class="icon">✏️</div>
+              <div class="icon">${menuEditIcon}</div>
               <div class="menu-item-content">
                 <div class="menu-item-title">Edit file</div>
-                <div class="menu-item-description">Allows you to edit the file</div>
+                <div class="menu-item-description text-foreground-500">Allows you to edit the file</div>
               </div>
               <div class="shortcut">⌘E</div>
             </div>
@@ -55,10 +58,10 @@ class EditComponent extends HTMLElement {
           <div class="section">
             <div class="section-title">Danger zone</div>
             <div class="menu-item danger">
-              <div class="icon">🗑️</div>
+              <div class="icon">${menuTrashIcon}</div>
               <div class="menu-item-content">
                 <div class="menu-item-title">Delete file</div>
-                <div class="menu-item-description">Permanently delete the file</div>
+                <div class="menu-item-description text-foreground-500">Permanently delete the file</div>
               </div>
               <div class="shortcut">⌘D</div>
             </div>
@@ -91,7 +94,7 @@ class EditComponent extends HTMLElement {
   
     document.addEventListener('click', (e) => {
       if (!this.isMenuOpen) return
-        
+      
       const isOutside = !this.shadow.contains(e.target)
       if (isOutside) {
         this.hideContextMenu()

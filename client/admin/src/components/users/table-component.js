@@ -246,12 +246,18 @@ class Table extends HTMLElement {
   }
 
   handleTableClick (event) {
-    const orderCard = event.target.closest('.order-card')
-    if (!orderCard) return
+    const orderCard = event.target.closest('.user-card')
+    if (!orderCard) { 
+      console.log('No order card found')
+      return
+    }
   
     const orderId = orderCard.dataset.id
     const order = store.getState().users.users.find(o => o.id === Number(orderId))
-    if (!order) return
+    if (!order) {
+      console.log('No order found')
+      return
+    }
   
     if (event.target.closest('.delete-button')) {
       this.handleDelete(order, orderCard)
